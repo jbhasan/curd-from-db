@@ -10,7 +10,3 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-
-Route::resource('/company', 'App\Http\Controllers\CompanyController');
-Route::resource('/odel=company', 'App\Http\Controllers\Odel=companyController');
