@@ -1,0 +1,29 @@
+{
+    "name": "sayeed/CrudFromDb",
+    "description": "Crud Generator From Database Schema",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Hasan Sayeed",
+            "email": "jbhasan@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "doctrine/dbal": "^2.5",
+        "laravelcollective/html":"^5.4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sayeed\\CrudFromDb\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Sayeed\\CrudFromDb\\CrudFromDbServiceProvider"
+            ]
+        }
+    }
+}

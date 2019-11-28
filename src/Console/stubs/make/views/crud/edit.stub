@@ -1,0 +1,62 @@
+@extends('layouts.crud-master')
+@section('content')
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        {!! $title !!}
+                        <div class="pull-right"><a href="/{!! strtolower($model_name) !!}" class="btn btn-xs btn-warning">{!! ucfirst(str_singular($model_name)) !!} List</a></div>
+                    </div>
+
+                    <div class="panel-body">
+                        {!! Form::model($data, ['method'=>'PATCH','route' => [strtolower($model_name).'.update',$data->id], 'files'=>true]) !!}
+                            @foreach($columns_fillable as $column)
+                                @if($column == 'email')
+                                    @php($type = 'email')
+                                @elseif($column == 'password')
+                                    @php($type = 'password')
+                                @else
+                                    @php($type = 'text')
+                                @endif
+
+                                <div class="form-group">
+                                    <label for="{!! $column !!}">{!! title_case(str_replace('_', ' ', $column)) !!}</label>
+                                    @if (\Schema::getColumnType($table_name, $column) == 'text')
+                                        {!! Form::textarea($column, null, ['class'=>"form-control date", 'id'=>$column, 'placeholder'=>title_case(str_replace('_', ' ', $column))]) !!}
+                                    @elseif (ends_with($column, '_id'))
+                                        @php
+                                            $relational_model_name = str_limit($column, strlen($column) - strlen('_id'), '');
+                                            if ($relational_model_name == 'parent') {
+                                                $relational_model = '\App\\'.$model_name;
+                                            } else {
+                                                $relational_model = '\App\\'.ucfirst(str_singular(str_limit($column, strlen($column) - strlen('_id'), '')));
+                                            }
+                                        @endphp
+                                        @if (class_exists($relational_model))
+                                            @php($relational_data = $relational_model::pluck('name', 'id')->prepend('-- Please Select --', '0'))
+                                            {!! Form::select($column, $relational_data, null, ['class'=>'form-control', 'id'=>$column]) !!}
+                                        @else
+                                            {!! Form::text($column, null, ['class'=>"form-control", 'id'=>$column, 'autocomplete'=>'off', 'placeholder'=>title_case(str_replace('_', ' ', $column))]) !!}
+                                        @endif
+                                    @elseif (ends_with($column, '_date'))
+                                        {!! Form::text($column, null, ['class'=>"form-control date", 'id'=>$column, 'autocomplete'=>'off', 'placeholder'=>title_case(str_replace('_', ' ', $column))]) !!}
+                                    @elseif (ends_with($column, '_datetime'))
+                                        {!! Form::text($column, null, ['class'=>"form-control datetime", 'id'=>$column, 'autocomplete'=>'off', 'placeholder'=>title_case(str_replace('_', ' ', $column))]) !!}
+                                    @else
+                                        {!! Form::text($column, null, ['class'=>"form-control", 'id'=>$column, 'autocomplete'=>'off', 'placeholder'=>title_case(str_replace('_', ' ', $column))]) !!}
+                                    @endif
+                                </div>
+                            @endforeach
+                            <button type="submit" class="btn btn-success">Update Data</button>
+                        {!! Form::close() !!}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@push('script')
+
+@endpush

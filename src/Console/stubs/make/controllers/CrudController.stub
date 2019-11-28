@@ -1,0 +1,178 @@
+<?php
+
+namespace {{namespace}}Http\Controllers;
+
+use App\{{model}};
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\View;
+
+class {{model}}Controller extends Controller
+{
+    protected $model;
+    protected $model_name;
+    protected $table_name;
+    protected $table_columns;
+    protected $table_columns_visible;
+    protected $table_columns_fillable;
+    protected $permissions;
+    public function __construct()
+    {
+        $this->middleware('web');
+        {{auth}}
+
+        DB::getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('json', 'text');
+        $this->model = new {{model}}();
+        $this->model_name = class_basename($this->model);
+        $this->table_name = $this->model->getTable();
+        $this->table_columns = Schema::getColumnListing($this->table_name);
+        $this->table_columns_visible = array_diff(Schema::getColumnListing($this->table_name), (array_merge($this->model->getHidden(), ['id'])));
+        if ($this->model->getFillable()) {
+            $this->table_columns_fillable = $this->model->getFillable();
+        } else {
+            $this->table_columns_fillable = array_diff($this->table_columns, ['id', 'created_by', 'updated_by', 'created_at', 'updated_at']);
+        }
+
+        /// You can add permission for user
+        $this->permissions = ['add', 'edit', 'delete', 'view'];
+
+        View::share('model_name', $this->model_name);
+        View::share('table_name', $this->table_name);
+        View::share('columns', $this->table_columns);
+        View::share('columns_visible', $this->table_columns_visible);
+        View::share('columns_fillable', $this->table_columns_fillable);
+        View::share('permissions', $this->permissions);
+
+        /// If you have a construct method in parent controller, need to uncomment below line
+        // parent::__construct();
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $title = 'All '.title_case($this->table_name);
+        $data = $this->model->paginate(10);
+        return view($this->table_name.'.index', compact('title', 'data'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        if (! in_array('add', $this->permissions)) {
+            return redirect(str_singular($this->table_name))->with('success', 'You dont have permission to create.');
+        }
+        $title = 'Create '.title_case(str_singular($this->table_name));
+        return view($this->table_name.'.create', compact('title'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        if (! in_array('add', $this->permissions)) {
+            return redirect(str_singular($this->table_name))->with('success', 'You dont have permission to create.');
+        }
+        $user_id = 0;
+        if (Auth::check()) {
+            $user_id = Auth::user()->id;
+        }
+        if (array_search('created_by', $this->table_columns) !== false) {
+            $request->merge(['created_by' => $user_id]);
+        }
+        if (array_search('updated_by', $this->table_columns) !== false) {
+            $request->merge(['updated_by' => 0]);
+        }
+        $this->model->create($request->all());
+        return redirect(str_singular($this->table_name))->with('success', 'Successfully added');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        if (! in_array('view', $this->permissions)) {
+            return redirect(str_singular($this->table_name))->with('success', 'You dont have permission to view.');
+        }
+        $title = 'View '.title_case(str_singular($this->table_name));
+        $data = $this->model->find($id);
+        if (!$data) {
+            return redirect(str_singular($this->table_name))->with('error', 'Data not found.');
+        }
+        return view($this->table_name.'.view', compact('title', 'data'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        if (! in_array('edit', $this->permissions)) {
+            return redirect(str_singular($this->table_name))->with('success', 'You dont have permission to edit.');
+        }
+        $title = 'Edit '.title_case($this->table_name);
+        $data = $this->model->find($id);
+        return view($this->table_name.'.edit', compact('title', 'data'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        if (! in_array('edit', $this->permissions)) {
+            return redirect(str_singular($this->table_name))->with('success', 'You dont have permission to edit.');
+        }
+        $user_id = 0;
+        if (Auth::check()) {
+            $user_id = Auth::user()->id;
+        }
+        if (array_search('updated_by', $this->table_columns) !== false) {
+            $request->merge(['updated_by' => $user_id]);
+        }
+        $this->model->find($id)->update($request->all());
+        return redirect(str_singular($this->table_name))->with('success', 'Successfully updated');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        if (! in_array('delete', $this->permissions)) {
+            return redirect(str_singular($this->table_name))->with('success', 'You dont have permission to delete.');
+        }
+        if ($this->model->find($id)->delete()) {
+            return redirect(str_singular($this->table_name))->with('success', 'Successfully deleted.');
+        } else {
+            return redirect()->back()->with('error', 'Something went wrong, please try again.');
+        }
+    }
+}
