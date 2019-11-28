@@ -1,5 +1,5 @@
 {
-    "name": "sayeed/CrudFromDb",
+    "name": "sayeed/crud-from-db",
     "description": "Crud Generator From Database Schema",
     "type": "library",
     "license": "MIT",
