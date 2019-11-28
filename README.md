@@ -7,9 +7,10 @@ Laravel CRUD generator will help you to generate CRUD direct from database schem
         - [Laravel 5.5 and above](#laravel-55-and-above)
         - [Laravel 5.4 and older](#laravel-54-and-older)
     - [Usage](#usage)
-        - [Migrate specific file](#migrate-specific-file)
-        - [Migrate specific directory](#migrate-specific-directory)
-        - [Refreshing migrations](#refreshing-migrations)
+        - [CRUD using specific model name](#crud-using-specific-model-name)
+        - [CRUD useing specific connection name](#crud-using-specific-connection-name)
+        - [CRUD with auth middleware](#crud-with-auth-middleware)
+        - [CRUD with forcefully overwrite](#crud-with-forcefully-overwrite)
     - [Credits](#credits)
 
 ## Installation
@@ -17,7 +18,7 @@ Laravel CRUD generator will help you to generate CRUD direct from database schem
 You can install the package via composer:
 
 ```shell
-composer require sayeed/custom-migrate
+composer require sayeed/crud-from-db
 ```
 
 ### Laravel 5.5 and above
@@ -31,58 +32,57 @@ In Laravel version 5.4 and older, you have to add the service provider in `confi
 ```php
 'providers' => [
     // ...
-    Sayeed\CustomMigrate\CustomMigrateServiceProvider::class,
-];
-```
-### Lumen
-
-After installing the package, you will have to register it in `bootstrap/app.php` file manually:
-```php
-// Register Service Providers
-    // ...
-    $app->register(Sayeed\CustomMigrate\CustomMigrateServiceProvider::class);
+    Sayeed\CrudFromDb\CrudFromDbServiceProvider::class,
 ];
 ```
 
 ## Usage
 
-After installing the package, you will now see a new ```php artisan migrate:custom``` command.
+After installing the package, you will now see a new ```php artisan crud:custom``` command.
 
-### Migrate specific file
+### CRUD using specific model name
 
-You can migrate a specific file inside your `database/migrations` folder using:
+You can generate CRUD from a specific table using table model name:
 
-```php artisan migrate:custom -f 2018_10_14_054732_create_tests_table```
-
-Alternatively, you can use the longform version:
-
-```php artisan migrate:custom --file 2018_10_14_054732_create_tests_table```
-
-### Migrate specific directory
-
-You can migrate a specific directory inside your `database/migrations` folder using:
-
-```php artisan migrate:custom -d migrations-subfolder```
+```php artisan crud:custom -m article```
 
 Alternatively, you can use the longform version:
 
-```php artisan migrate:custom --directory migrations-subfolder```
+```php artisan crud:custom --model=article```
 
-### Refreshing migrations
+### CRUD useing specific connection name
 
-You can refresh migrations inside your project using:
+You can generate CRUD from specific database connection, default connection mysql:
 
-```php artisan migrate:custom -r```
+```php artisan crud:custom -c mysql```
 
 Alternatively, you can use the longform version:
 
-```php artisan migrate:custom --refresh```
+```php artisan crud:custom --connection=mysql```
+
+### CRUD with auth middleware
+
+You can generate CRUD with auth middleware:
+
+```php artisan crud:custom -a```
+
+Alternatively, you can use the longform version:
+
+```php artisan crud:custom --auth```
+
+### CRUD with forcefully overwrite
+
+You can generate CRUD with forcefully overwritten existing file:
+
+```php artisan crud:custom -f```
+
+Alternatively, you can use the longform version:
+
+```php artisan crud:custom --force```
+
 
 ## Credits
 
 - [Md. Hasan Sayeed](https://github.com/nilpahar)
-- [Gal Jakic](https://github.com/morpheus7CS)
-
- For any questions, you can reach out to the author of this package, Md. Hasan Sayeed.
 
  Thank you for using it.
