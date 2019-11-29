@@ -96,6 +96,9 @@ class CrudFromDbCommand extends Command
 
     protected function makeCompileModel($model_name)
     {
+        /// make directory for curd files
+        $this->createDirectories($model_name);
+
         /// Controller for Crud
         file_put_contents(
             app_path('Http/Controllers/'.$model_name.'Controller.php'),
@@ -128,9 +131,6 @@ class CrudFromDbCommand extends Command
 
         /// Layout for Crud
         $this->exportLayout();
-
-        /// make directory for curd files
-        $this->createDirectories($model_name);
 
         /// make view file for curd
         $this->exportViews($model_name);
