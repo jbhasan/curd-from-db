@@ -16,7 +16,7 @@ class CrudFromDbCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'crud:custom {--m|model=} {--c|connection=} {--f|force} {--a|auth}';
+    protected $signature = 'crud:custom {--m|model= : Model for specific model CRUD} {--c|connection=mysql : Connection for specific connected database} {--f|force : Forcefully overwritten all files} {--a|auth : For auth middleware in controller} {--s|skip= : If any table skip for this process}';
 
     /**
      * The console command description.
@@ -56,11 +56,13 @@ class CrudFromDbCommand extends Command
     public $connection;
     public $force;
     public $auth;
+    public $skip;
     public function handle()
     {
         $this->model = $this->option('model');
         $this->force = $this->option('force');
         $this->auth = $this->option('auth');
+        $this->skip = $this->option('skip');
 
         if (! $this->option('connection')) {
             $this->connection = 'mysql'; //its default
@@ -74,16 +76,25 @@ class CrudFromDbCommand extends Command
             $tables = DB::connection($this->connection)->select('SHOW TABLES');
             $table_key = "Tables_in_".$database_name;
             foreach ($tables as $table) {
+                if ($table->$table_key == 'migrations') {
+                    continue;
+                }
+                if ($this->option('skip')) {
+                    $this->skip = explode(',', $this->skip);
+                    if (in_array($table->$table_key, $this->skip) || in_array(str_singular($table->$table_key), $this->skip)) {
+                        continue;
+                    }
+                }
                 $model_name = studly_case(str_singular($table->$table_key));
-                $this->makeCompileModel($model_name, $database_name, $this->connection);
+                $this->makeCompileModel($model_name);
             }
         } else {
             $model_name = studly_case(str_singular($this->model));
-            $this->makeCompileModel($model_name, $database_name, $this->connection);
+            $this->makeCompileModel($model_name);
         }
     }
 
-    protected function makeCompileModel($model_name, $database_name, $connection_name)
+    protected function makeCompileModel($model_name)
     {
         /// Controller for Crud
         file_put_contents(
