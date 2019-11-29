@@ -29,12 +29,21 @@ The package will automatically register itself, so you can start using it immedi
 
 ### Laravel 5.4 and older
 
-In Laravel version 5.4 and older, you have to add the service provider in `config/app.php` file manually:
+In Laravel version 5.4 and older, you have to add your new provider to the `providers` array of `config/app.php`:
 
 ```php
 'providers' => [
     // ...
+    Collective\Html\HtmlServiceProvider::class,
     Sayeed\CrudFromDb\CrudFromDbServiceProvider::class,
+];
+```
+Add two class aliases to the `aliases` array of `config/app.php`
+```php
+'aliases' => [
+    // ...
+    'Form' => Collective\Html\FormFacade::class,
+    'Html' => Collective\Html\HtmlFacade::class,
 ];
 ```
 
