@@ -11,6 +11,7 @@ Laravel CRUD generator will help you to generate CRUD direct from database schem
         - [CRUD useing specific connection name](#crud-using-specific-connection-name)
         - [CRUD with auth middleware](#crud-with-auth-middleware)
         - [CRUD with forcefully overwrite](#crud-with-forcefully-overwrite)
+    - [Help](#crud-help)
     - [Credits](#credits)
 
 ## Installation
@@ -79,6 +80,16 @@ You can generate CRUD with forcefully overwritten existing file:
 Alternatively, you can use the longform version:
 
 ```php artisan crud:custom --force```
+
+### CRUD help
+
+CRUD help:
+
+```php artisan crud:custom -h```
+
+Alternatively, you can use the longform version:
+
+```php artisan crud:custom --help```
 
 
 ## Credits
