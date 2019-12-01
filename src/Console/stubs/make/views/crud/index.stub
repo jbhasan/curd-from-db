@@ -6,7 +6,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         {!! $title !!}
-                        <div class="pull-right"><a href="/{!! strtolower($model_name) !!}/create" class="btn btn-xs btn-warning">Add New</a></div>
+                        <div class="pull-right"><a href="/{!! snake_case($model_name) !!}/create" class="btn btn-xs btn-warning">Add New</a></div>
                     </div>
 
                     <div class="panel-body">
@@ -36,13 +36,13 @@
                                                 <td>
                                                     <div class="btn-group">
                                                         @if (in_array('view', $permissions))
-                                                            <a href="/{!! strtolower($model_name) !!}/{!! $data_item->id !!}" class="btn btn-xs btn-info">VIEW</a>
+                                                            <a href="/{!! snake_case($model_name) !!}/{!! $data_item->id !!}" class="btn btn-xs btn-info">VIEW</a>
                                                         @endif
                                                         @if (in_array('edit', $permissions))
-                                                            <a href="/{!! strtolower($model_name) !!}/{!! $data_item->id !!}/edit" class="btn btn-xs btn-warning">EDIT</a>
+                                                            <a href="/{!! snake_case($model_name) !!}/{!! $data_item->id !!}/edit" class="btn btn-xs btn-warning">EDIT</a>
                                                         @endif
                                                         @if (in_array('delete', $permissions))
-                                                            {!! Form::open(array('method'=>'DELETE', 'route'=>array(strtolower($model_name).'.destroy',$data_item->id), 'class'=>'btn-group'))!!}
+                                                            {!! Form::open(array('method'=>'DELETE', 'route'=>array(snake_case($model_name).'.destroy',$data_item->id), 'class'=>'btn-group'))!!}
                                                             {!! Form::submit('Delete', array('class'=>'btn btn-danger  btn-sm','onclick' => 'return confirm("Are you sure want to Delete?");'))!!}
                                                             {!! Form::close()!!}
                                                         @endif

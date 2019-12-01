@@ -6,7 +6,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     {!! $title !!}
-                    <div class="pull-right"><a href="/{!! strtolower($model_name) !!}" class="btn btn-xs btn-warning">{!! ucfirst(str_singular($model_name)) !!} List</a></div>
+                    <div class="pull-right"><a href="/{!! snake_case($model_name) !!}" class="btn btn-xs btn-warning">{!! ucfirst(str_singular($model_name)) !!} List</a></div>
                 </div>
 
                 <div class="panel-body">

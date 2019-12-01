@@ -6,11 +6,11 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         {!! $title !!}
-                        <div class="pull-right"><a href="/{!! strtolower($model_name) !!}" class="btn btn-xs btn-warning">{!! ucfirst(str_singular($model_name)) !!} List</a></div>
+                        <div class="pull-right"><a href="/{!! snake_case($model_name) !!}" class="btn btn-xs btn-warning">{!! ucfirst(str_singular($model_name)) !!} List</a></div>
                     </div>
 
                     <div class="panel-body">
-                        {!! Form::model($data, ['method'=>'PATCH','route' => [strtolower($model_name).'.update',$data->id], 'files'=>true]) !!}
+                        {!! Form::model($data, ['method'=>'PATCH','route' => [snake_case($model_name).'.update',$data->id], 'files'=>true]) !!}
                             @foreach($columns_fillable as $column)
                                 @if($column == 'email')
                                     @php($type = 'email')

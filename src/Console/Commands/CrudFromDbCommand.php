@@ -107,7 +107,7 @@ class CrudFromDbCommand extends Command
 
         /// Route for Crud
         $route_file_content = file_get_contents(__DIR__.'/../../routes/web.php');
-        $new_route_date = "\nRoute::resource('/".strtolower($model_name)."', 'App\Http\Controllers\\".$model_name."Controller');";
+        $new_route_date = "\nRoute::resource('/".snake_case($model_name)."', 'App\Http\Controllers\\".$model_name."Controller');";
         if (! str_contains($route_file_content, $new_route_date)) {
             file_put_contents(
                 __DIR__.'/../../routes/web.php',
@@ -182,8 +182,8 @@ class CrudFromDbCommand extends Command
             mkdir(resource_path('views/layouts'), 0755, true);
         }
 
-        if (! is_dir(resource_path('views/'.str_plural(strtolower($model_name))))) {
-            mkdir(resource_path('views/'.str_plural(strtolower($model_name))), 0755, true);
+        if (! is_dir(resource_path('views/'.str_plural(snake_case($model_name))))) {
+            mkdir(resource_path('views/'.str_plural(snake_case($model_name))), 0755, true);
         }
     }
 
@@ -204,7 +204,7 @@ class CrudFromDbCommand extends Command
     protected function exportViews($model_name)
     {
         foreach ($this->views as $key => $value) {
-            if (file_exists(resource_path('views/'.str_plural(strtolower($model_name)).'/'.$value)) && ! $this->option('force')) {
+            if (file_exists(resource_path('views/'.str_plural(snake_case($model_name)).'/'.$value)) && ! $this->option('force')) {
                 if (! $this->confirm("The [{$value}] view already exists. Do you want to replace it?")) {
                     continue;
                 }
@@ -212,7 +212,7 @@ class CrudFromDbCommand extends Command
 
             copy(
                 __DIR__.'/../stubs/make/views/'.$key,
-                resource_path('views/'.str_plural(strtolower($model_name)).'/'.$value)
+                resource_path('views/'.str_plural(snake_case($model_name)).'/'.$value)
             );
         }
     }

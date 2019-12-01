@@ -10,4 +10,4 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::resource('/issue', 'App\Http\Controllers\IssueController');
+Route::resource('/bank_account', 'App\Http\Controllers\BankAccountController');
