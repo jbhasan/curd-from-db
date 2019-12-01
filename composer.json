@@ -1,6 +1,7 @@
 {
     "name": "sayeed/crud-from-db",
     "description": "Crud Generator From Database Schema",
+    "keywords": ["crud", "generator", "generate", "schema", "database"],
     "type": "library",
     "license": "MIT",
     "authors": [

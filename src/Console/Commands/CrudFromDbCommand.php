@@ -80,8 +80,8 @@ class CrudFromDbCommand extends Command
                     continue;
                 }
                 if ($this->option('skip')) {
-                    $this->skip = explode(',', $this->skip);
-                    if (in_array($table->$table_key, $this->skip) || in_array(str_singular($table->$table_key), $this->skip)) {
+                    $skip = explode(',', $this->skip);
+                    if (in_array($table->$table_key, $skip) || in_array(str_singular($table->$table_key), $skip)) {
                         continue;
                     }
                 }
