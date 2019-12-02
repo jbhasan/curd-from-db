@@ -72,6 +72,7 @@ class CrudFromDbCommand extends Command
 
         $database_name = DB::connection($this->connection)->getDatabaseName();
         /// Layout for Crud
+        $this->createDirectories();
         $this->exportLayout();
 
         if (! $this->option('model')) {
@@ -176,14 +177,16 @@ class CrudFromDbCommand extends Command
         );
     }
 
-    protected function createDirectories($model_name)
+    protected function createDirectories($model_name = false)
     {
         if (! is_dir(resource_path('views/layouts'))) {
             mkdir(resource_path('views/layouts'), 0755, true);
         }
 
-        if (! is_dir(resource_path('views/'.str_plural(snake_case($model_name))))) {
-            mkdir(resource_path('views/'.str_plural(snake_case($model_name))), 0755, true);
+        if ($model_name) {
+            if (!is_dir(resource_path('views/' . str_plural(snake_case($model_name))))) {
+                mkdir(resource_path('views/' . str_plural(snake_case($model_name))), 0755, true);
+            }
         }
     }
 
