@@ -71,6 +71,9 @@ class CrudFromDbCommand extends Command
         }
 
         $database_name = DB::connection($this->connection)->getDatabaseName();
+        /// Layout for Crud
+        $this->exportLayout();
+
         if (! $this->option('model')) {
             //$tables = DB::connection($this->connection)->getDoctrineSchemaManager()->listTableNames();
             $tables = DB::connection($this->connection)->select('SHOW TABLES');
@@ -128,9 +131,6 @@ class CrudFromDbCommand extends Command
                 $this->compileModelStub($model_name)
             );
         }
-
-        /// Layout for Crud
-        $this->exportLayout();
 
         /// make view file for curd
         $this->exportViews($model_name);
