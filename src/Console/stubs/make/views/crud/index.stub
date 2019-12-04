@@ -1,68 +1,66 @@
 @extends('layouts.crud-master')
 @section('content')
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        {!! $title !!}
-                        <div class="pull-right"><a href="/{!! snake_case($model_name) !!}/create" class="btn btn-xs btn-warning">Add New</a></div>
-                    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {!! $title !!}
+                    <div class="pull-right"><a href="/{!! snake_case($model_name) !!}/create" class="btn btn-xs btn-warning">Add New</a></div>
+                </div>
 
-                    <div class="panel-body">
-                        @if (isset($data) && count($data) > 0)
-                            <div class="table-responsive">
-                                <table class="table table-hover table-striped">
-                                    <thead>
+                <div class="panel-body">
+                    @if (isset($data) && count($data) > 0)
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Sl</th>
+                                    @foreach($columns_visible as $column)
+                                        <th>{!! title_case(str_replace('_', ' ', $column)) !!}</th>
+                                    @endforeach
+                                    @if (in_array('edit', $permissions) || in_array('delete', $permissions) || in_array('view', $permissions))
+                                        <th>Action</th>
+                                    @endif
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @php($serial = $data->perPage() * ($data->currentPage() - 1))
+                                @foreach($data as $data_item)
                                     <tr>
-                                        <th>Sl</th>
+                                        <td>{!! ++$serial !!}</td>
                                         @foreach($columns_visible as $column)
-                                            <th>{!! title_case(str_replace('_', ' ', $column)) !!}</th>
+                                            <td>{!! $data_item->$column !!}</td>
                                         @endforeach
                                         @if (in_array('edit', $permissions) || in_array('delete', $permissions) || in_array('view', $permissions))
-                                            <th>Action</th>
+                                            <td>
+                                                <div class="btn-group">
+                                                    @if (in_array('view', $permissions))
+                                                        <a href="/{!! snake_case($model_name) !!}/{!! $data_item->id !!}" class="btn btn-xs btn-info">VIEW</a>
+                                                    @endif
+                                                    @if (in_array('edit', $permissions))
+                                                        <a href="/{!! snake_case($model_name) !!}/{!! $data_item->id !!}/edit" class="btn btn-xs btn-warning">EDIT</a>
+                                                    @endif
+                                                    @if (in_array('delete', $permissions))
+                                                        {!! Form::open(array('method'=>'DELETE', 'route'=>array(snake_case($model_name).'.destroy',$data_item->id), 'class'=>'btn-group'))!!}
+                                                        {!! Form::submit('Delete', array('class'=>'btn btn-danger  btn-sm','onclick' => 'return confirm("Are you sure want to Delete?");'))!!}
+                                                        {!! Form::close()!!}
+                                                    @endif
+                                                </div>
+                                            </td>
                                         @endif
                                     </tr>
-                                    </thead>
-                                    <tbody>
-                                    @php($serial = $data->perPage() * ($data->currentPage() - 1))
-                                    @foreach($data as $data_item)
-                                        <tr>
-                                            <td>{!! ++$serial !!}</td>
-                                            @foreach($columns_visible as $column)
-                                                <td>{!! $data_item->$column !!}</td>
-                                            @endforeach
-                                            @if (in_array('edit', $permissions) || in_array('delete', $permissions) || in_array('view', $permissions))
-                                                <td>
-                                                    <div class="btn-group">
-                                                        @if (in_array('view', $permissions))
-                                                            <a href="/{!! snake_case($model_name) !!}/{!! $data_item->id !!}" class="btn btn-xs btn-info">VIEW</a>
-                                                        @endif
-                                                        @if (in_array('edit', $permissions))
-                                                            <a href="/{!! snake_case($model_name) !!}/{!! $data_item->id !!}/edit" class="btn btn-xs btn-warning">EDIT</a>
-                                                        @endif
-                                                        @if (in_array('delete', $permissions))
-                                                            {!! Form::open(array('method'=>'DELETE', 'route'=>array(snake_case($model_name).'.destroy',$data_item->id), 'class'=>'btn-group'))!!}
-                                                            {!! Form::submit('Delete', array('class'=>'btn btn-danger  btn-sm','onclick' => 'return confirm("Are you sure want to Delete?");'))!!}
-                                                            {!! Form::close()!!}
-                                                        @endif
-                                                    </div>
-                                                </td>
-                                            @endif
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                                {!! $data->links() !!}
-                            @else
-                                <div class="alert alert-info">No data found</div>
-                            @endif
+                                @endforeach
+                                </tbody>
+                            </table>
                         </div>
-                    </div>
+                        {!! $data->links() !!}
+                    @else
+                        <div class="alert alert-info">No data found</div>
+                    @endif
                 </div>
             </div>
         </div>
+    </div>
     @endsection
 
     @push('script')
