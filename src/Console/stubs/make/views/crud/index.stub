@@ -5,7 +5,11 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     {!! $title !!}
-                    <div class="pull-right"><a href="/{!! snake_case($model_name) !!}/create" class="btn btn-xs btn-warning">Add New</a></div>
+                    <div class="pull-right">
+                        @if (in_array('add', $permissions))
+                            <a href="/{!! snake_case($model_name) !!}/create" class="btn btn-xs btn-warning">Add New</a>
+                        @endif
+                    </div>
                 </div>
 
                 <div class="panel-body">
