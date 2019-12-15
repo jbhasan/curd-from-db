@@ -194,7 +194,7 @@ class CrudFromDbCommand extends Command
     {
         if (file_exists(resource_path('views/layouts/crud-master.blade.php')) && ! $this->option('force')) {
             if (! $this->confirm("The [crud-master.blade.php] layout already exists. Do you want to replace it?")) {
-                continue;
+                return true;
             }
         }
 
