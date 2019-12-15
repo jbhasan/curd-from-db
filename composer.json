@@ -12,6 +12,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
+        "php": ">=7.0",
         "doctrine/dbal": "^2.10",
         "laravelcollective/html":"^6.0"
     },
@@ -26,5 +27,8 @@
                 "Sayeed\\CrudFromDb\\CrudFromDbServiceProvider"
             ]
         }
+    },
+    "require-dev": {
+        "laravel/framework": "5.5.x"
     }
 }
