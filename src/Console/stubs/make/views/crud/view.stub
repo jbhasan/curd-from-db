@@ -1,20 +1,20 @@
 @extends('layouts.crud-master')
 @section('content')
-    <div class="row">
+    <div class="row justify-content-center">
         <div class="col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="card">
+                <div class="card-header">
                     {!! $title !!}
-                    <div class="pull-right"><a href="/{!! snake_case($model_name) !!}" class="btn btn-xs btn-warning">{!! ucfirst(str_singular($model_name)) !!} List</a></div>
+                    <div class="float-right"><a href="/{!! Illuminate\Support\Str::snake($model_name) !!}" class="btn btn-xs btn-warning">{!! ucfirst(Illuminate\Support\Str::singular($model_name)) !!} List</a></div>
                 </div>
 
-                <div class="panel-body">
+                <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-hover table-striped table-bordered">
                             <tbody>
                                 @foreach($columns_visible as $column)
                                     <tr>
-                                    <td>{!! title_case(str_replace('_', ' ', $column)) !!}</td>
+                                    <td>{!! Illuminate\Support\Str::title(str_replace('_', ' ', $column)) !!}</td>
                                     <td>{!! $data->$column !!}</td>
                                     </tr>
                                 @endforeach

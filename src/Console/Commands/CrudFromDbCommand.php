@@ -7,6 +7,7 @@ use Illuminate\Console\DetectsApplicationNamespace;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Doctrine\DBAL\Driver\PDOSqlsrv\Driver as DoctrineDriver;
+use Illuminate\Support\Str;
 
 class CrudFromDbCommand extends Command
 {
@@ -85,15 +86,15 @@ class CrudFromDbCommand extends Command
                 }
                 if ($this->option('skip')) {
                     $skip = explode(',', $this->skip);
-                    if (in_array($table->$table_key, $skip) || in_array(str_singular($table->$table_key), $skip)) {
+                    if (in_array($table->$table_key, $skip) || in_array(Str::singular($table->$table_key), $skip)) {
                         continue;
                     }
                 }
-                $model_name = studly_case(str_singular($table->$table_key));
+                $model_name = Str::studly(Str::singular($table->$table_key));
                 $this->makeCompileModel($model_name);
             }
         } else {
-            $model_name = studly_case(str_singular($this->model));
+            $model_name = Str::studly(Str::singular($this->model));
             $this->makeCompileModel($model_name);
         }
     }
@@ -111,8 +112,8 @@ class CrudFromDbCommand extends Command
 
         /// Route for Crud
         $route_file_content = file_get_contents(__DIR__.'/../../routes/web.php');
-        $new_route_date = "\nRoute::resource('/".snake_case($model_name)."', 'App\Http\Controllers\\".$model_name."Controller');";
-        if (! str_contains($route_file_content, $new_route_date)) {
+        $new_route_date = "\nRoute::resource('/".Str::snake($model_name)."', 'App\Http\Controllers\\".$model_name."Controller');";
+        if (! Str::contains($route_file_content, $new_route_date)) {
             file_put_contents(
                 __DIR__.'/../../routes/web.php',
                 $new_route_date,
@@ -184,8 +185,8 @@ class CrudFromDbCommand extends Command
         }
 
         if ($model_name) {
-            if (!is_dir(resource_path('views/' . str_plural(snake_case($model_name))))) {
-                mkdir(resource_path('views/' . str_plural(snake_case($model_name))), 0755, true);
+            if (!is_dir(resource_path('views/' . Str::plural(Str::snake($model_name))))) {
+                mkdir(resource_path('views/' . Str::plural(Str::snake($model_name))), 0755, true);
             }
         }
     }
@@ -207,7 +208,7 @@ class CrudFromDbCommand extends Command
     protected function exportViews($model_name)
     {
         foreach ($this->views as $key => $value) {
-            if (file_exists(resource_path('views/'.str_plural(snake_case($model_name)).'/'.$value)) && ! $this->option('force')) {
+            if (file_exists(resource_path('views/'.Str::plural(Str::snake($model_name)).'/'.$value)) && ! $this->option('force')) {
                 if (! $this->confirm("The [{$value}] view already exists. Do you want to replace it?")) {
                     continue;
                 }
@@ -215,7 +216,7 @@ class CrudFromDbCommand extends Command
 
             copy(
                 __DIR__.'/../stubs/make/views/'.$key,
-                resource_path('views/'.str_plural(snake_case($model_name)).'/'.$value)
+                resource_path('views/'.Str::plural(Str::snake($model_name)).'/'.$value)
             );
         }
     }

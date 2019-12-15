@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
 
 class {{model}}Controller extends Controller
 {
@@ -56,7 +57,7 @@ class {{model}}Controller extends Controller
      */
     public function index()
     {
-        $title = 'All '.title_case($this->table_name);
+        $title = 'All '.Str::title($this->table_name);
         $data = $this->model->paginate(10);
         return view($this->table_name.'.index', compact('title', 'data'));
     }
@@ -69,9 +70,9 @@ class {{model}}Controller extends Controller
     public function create()
     {
         if (! in_array('add', $this->permissions)) {
-            return redirect(str_singular($this->table_name))->with('success', 'You dont have permission to create.');
+            return redirect(Str::singular($this->table_name))->with('success', 'You dont have permission to create.');
         }
-        $title = 'Create '.title_case(str_singular($this->table_name));
+        $title = 'Create '.Str::title(Str::singular($this->table_name));
         return view($this->table_name.'.create', compact('title'));
     }
 
@@ -84,7 +85,7 @@ class {{model}}Controller extends Controller
     public function store(Request $request)
     {
         if (! in_array('add', $this->permissions)) {
-            return redirect(str_singular($this->table_name))->with('success', 'You dont have permission to create.');
+            return redirect(Str::singular($this->table_name))->with('success', 'You dont have permission to create.');
         }
         $user_id = 0;
         if (Auth::check()) {
@@ -97,7 +98,7 @@ class {{model}}Controller extends Controller
             $request->merge(['updated_by' => 0]);
         }
         $this->model->create($request->all());
-        return redirect(str_singular($this->table_name))->with('success', 'Successfully added');
+        return redirect(Str::singular($this->table_name))->with('success', 'Successfully added');
     }
 
     /**
@@ -109,12 +110,12 @@ class {{model}}Controller extends Controller
     public function show($id)
     {
         if (! in_array('view', $this->permissions)) {
-            return redirect(str_singular($this->table_name))->with('success', 'You dont have permission to view.');
+            return redirect(Str::singular($this->table_name))->with('success', 'You dont have permission to view.');
         }
-        $title = 'View '.title_case(str_singular($this->table_name));
+        $title = 'View '.Str::title(Str::singular($this->table_name));
         $data = $this->model->find($id);
         if (!$data) {
-            return redirect(str_singular($this->table_name))->with('error', 'Data not found.');
+            return redirect(Str::singular($this->table_name))->with('error', 'Data not found.');
         }
         return view($this->table_name.'.view', compact('title', 'data'));
     }
@@ -128,9 +129,9 @@ class {{model}}Controller extends Controller
     public function edit($id)
     {
         if (! in_array('edit', $this->permissions)) {
-            return redirect(str_singular($this->table_name))->with('success', 'You dont have permission to edit.');
+            return redirect(Str::singular($this->table_name))->with('success', 'You dont have permission to edit.');
         }
-        $title = 'Edit '.title_case($this->table_name);
+        $title = 'Edit '.Str::title($this->table_name);
         $data = $this->model->find($id);
         return view($this->table_name.'.edit', compact('title', 'data'));
     }
@@ -145,7 +146,7 @@ class {{model}}Controller extends Controller
     public function update(Request $request, $id)
     {
         if (! in_array('edit', $this->permissions)) {
-            return redirect(str_singular($this->table_name))->with('success', 'You dont have permission to edit.');
+            return redirect(Str::singular($this->table_name))->with('success', 'You dont have permission to edit.');
         }
         $user_id = 0;
         if (Auth::check()) {
@@ -155,7 +156,7 @@ class {{model}}Controller extends Controller
             $request->merge(['updated_by' => $user_id]);
         }
         $this->model->find($id)->update($request->all());
-        return redirect(str_singular($this->table_name))->with('success', 'Successfully updated');
+        return redirect(Str::singular($this->table_name))->with('success', 'Successfully updated');
     }
 
     /**
@@ -167,10 +168,10 @@ class {{model}}Controller extends Controller
     public function destroy($id)
     {
         if (! in_array('delete', $this->permissions)) {
-            return redirect(str_singular($this->table_name))->with('success', 'You dont have permission to delete.');
+            return redirect(Str::singular($this->table_name))->with('success', 'You dont have permission to delete.');
         }
         if ($this->model->find($id)->delete()) {
-            return redirect(str_singular($this->table_name))->with('success', 'Successfully deleted.');
+            return redirect(Str::singular($this->table_name))->with('success', 'Successfully deleted.');
         } else {
             return redirect()->back()->with('error', 'Something went wrong, please try again.');
         }

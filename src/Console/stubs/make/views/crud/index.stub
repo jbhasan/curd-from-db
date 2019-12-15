@@ -1,18 +1,18 @@
 @extends('layouts.crud-master')
 @section('content')
-    <div class="row">
+    <div class="row justify-content-center">
         <div class="col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="card">
+                <div class="card-header">
                     {!! $title !!}
-                    <div class="pull-right">
+                    <div class="float-right">
                         @if (in_array('add', $permissions))
-                            <a href="/{!! snake_case($model_name) !!}/create" class="btn btn-xs btn-warning">Add New</a>
+                            <a href="/{!! Illuminate\Support\Str::snake($model_name) !!}/create" class="btn btn-xs btn-warning">Add New</a>
                         @endif
                     </div>
                 </div>
 
-                <div class="panel-body">
+                <div class="card-body">
                     @if (isset($data) && count($data) > 0)
                         <div class="table-responsive">
                             <table class="table table-hover table-striped">
@@ -20,7 +20,7 @@
                                 <tr>
                                     <th>Sl</th>
                                     @foreach($columns_visible as $column)
-                                        <th>{!! title_case(str_replace('_', ' ', $column)) !!}</th>
+                                        <th>{!! Illuminate\Support\Str::title(str_replace('_', ' ', $column)) !!}</th>
                                     @endforeach
                                     @if (in_array('edit', $permissions) || in_array('delete', $permissions) || in_array('view', $permissions))
                                         <th>Action</th>
@@ -39,13 +39,13 @@
                                             <td>
                                                 <div class="btn-group">
                                                     @if (in_array('view', $permissions))
-                                                        <a href="/{!! snake_case($model_name) !!}/{!! $data_item->id !!}" class="btn btn-xs btn-info">VIEW</a>
+                                                        <a href="/{!! Illuminate\Support\Str::snake($model_name) !!}/{!! $data_item->id !!}" class="btn btn-xs btn-info">VIEW</a>
                                                     @endif
                                                     @if (in_array('edit', $permissions))
-                                                        <a href="/{!! snake_case($model_name) !!}/{!! $data_item->id !!}/edit" class="btn btn-xs btn-warning">EDIT</a>
+                                                        <a href="/{!! Illuminate\Support\Str::snake($model_name) !!}/{!! $data_item->id !!}/edit" class="btn btn-xs btn-warning">EDIT</a>
                                                     @endif
                                                     @if (in_array('delete', $permissions))
-                                                        {!! Form::open(array('method'=>'DELETE', 'route'=>array(snake_case($model_name).'.destroy',$data_item->id), 'class'=>'btn-group'))!!}
+                                                        {!! Form::open(array('method'=>'DELETE', 'route'=>array(Illuminate\Support\Str::snake($model_name).'.destroy',$data_item->id), 'class'=>'btn-group'))!!}
                                                         {!! Form::submit('Delete', array('class'=>'btn btn-danger  btn-sm','onclick' => 'return confirm("Are you sure want to Delete?");'))!!}
                                                         {!! Form::close()!!}
                                                     @endif
