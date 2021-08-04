@@ -24,7 +24,7 @@ class CrudFromDbServiceProvider extends ServiceProvider
     public function register()
     {
         $this->commands([
-            \Sayeed\CrudFromDb\Commands\CrudFromDbCommand::class,
+            \Sayeed\CrudFromDb\Console\Commands\CrudFromDbCommand::class,
         ]);
     }
 }
