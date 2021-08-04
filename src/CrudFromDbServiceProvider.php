@@ -26,5 +26,6 @@ class CrudFromDbServiceProvider extends ServiceProvider
         $this->commands([
             \Sayeed\CrudFromDb\Console\Commands\CrudFromDbCommand::class,
         ]);
+
     }
 }
