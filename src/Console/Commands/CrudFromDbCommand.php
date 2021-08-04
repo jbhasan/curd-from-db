@@ -1,6 +1,6 @@
 <?php
 
-namespace Sayeed\CrudFromDb\Commands;
+namespace Sayeed\CrudFromDb\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Console\DetectsApplicationNamespace;

@@ -29,6 +29,6 @@
         }
     },
     "require-dev": {
-        "laravel/framework": "5.5.x | 6.x"
+        "laravel/framework": "7.*"
     }
 }
