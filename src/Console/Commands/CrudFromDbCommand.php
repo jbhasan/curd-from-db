@@ -140,7 +140,7 @@ class CrudFromDbCommand extends Command
     {
         $crudController = str_replace(
             '{{namespace}}',
-            app()->getAppNamespace(),
+            app()->getNamespace(),
             file_get_contents(__DIR__.'/../stubs/make/controllers/CrudController.stub')
         );
 
@@ -165,7 +165,7 @@ class CrudFromDbCommand extends Command
     {
         $crudModel = str_replace(
             '{{namespace}}',
-            app()->getAppNamespace(),
+            app()->getNamespace(),
             file_get_contents(__DIR__.'/../stubs/make/Model.stub')
         );
 
