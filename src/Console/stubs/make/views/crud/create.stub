@@ -24,14 +24,14 @@
                                 @if (\Schema::getColumnType($table_name, $column) == 'text')
                                     {!! Form::textarea($column, null, ['class'=>"form-control date", 'id'=>$column, 'placeholder'=>Illuminate\Support\Str::title(str_replace('_', ' ', $column))]) !!}
                                 @elseif (Illuminate\Support\Str::endsWith($column, '_id'))
-                                    @php
+                                    <?php
                                         $relational_model_name = Illuminate\Support\Str::limit($column, strlen($column) - strlen('_id'), '');
                                         if ($relational_model_name == 'parent') {
                                             $relational_model = '\App\\'.$model_name;
                                         } else {
                                             $relational_model = '\App\\'.ucfirst(Illuminate\Support\Str::singular(Illuminate\Support\Str::limit($column, strlen($column) - strlen('_id'), '')));
                                         }
-                                    @endphp
+                                    ?>
                                     @if (class_exists($relational_model))
                                         @php($relational_data = $relational_model::pluck('name', 'id')->prepend('-- Please Select --', '0'))
                                         {!! Form::select($column, $relational_data, null, ['class'=>'form-control', 'id'=>$column]) !!}
