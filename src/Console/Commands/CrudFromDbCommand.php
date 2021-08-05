@@ -3,7 +3,6 @@
 namespace Sayeed\CrudFromDb\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Console\DetectsApplicationNamespace;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Doctrine\DBAL\Driver\PDOSqlsrv\Driver as DoctrineDriver;
@@ -11,7 +10,6 @@ use Illuminate\Support\Str;
 
 class CrudFromDbCommand extends Command
 {
-    use DetectsApplicationNamespace;
     /**
      * The name and signature of the console command.
      *
@@ -142,7 +140,7 @@ class CrudFromDbCommand extends Command
     {
         $crudController = str_replace(
             '{{namespace}}',
-            $this->getAppNamespace(),
+            app()->getAppNamespace(),
             file_get_contents(__DIR__.'/../stubs/make/controllers/CrudController.stub')
         );
 
@@ -167,7 +165,7 @@ class CrudFromDbCommand extends Command
     {
         $crudModel = str_replace(
             '{{namespace}}',
-            $this->getAppNamespace(),
+            app()->getAppNamespace(),
             file_get_contents(__DIR__.'/../stubs/make/Model.stub')
         );
 
