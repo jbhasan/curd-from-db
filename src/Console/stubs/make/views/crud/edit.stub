@@ -29,7 +29,7 @@
                                         if ($relational_model_name == 'parent') {
                                             $relational_model = '\App\\'.$model_name;
                                         } else {
-                                            $relational_model = '\App\\'.ucfirst(Illuminate\Support\Str::singular(Illuminate\Support\Str::limit($column, strlen($column) - strlen('_id'), '')));
+											$relational_model = '\App\\'.ucfirst(Illuminate\Support\Str::camel(Illuminate\Support\Str::singular(Illuminate\Support\Str::limit($column, strlen($column) - strlen('_id'), ''))));
                                         }
                                     ?>
                                     @if (class_exists($relational_model))

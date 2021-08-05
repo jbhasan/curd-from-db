@@ -14,8 +14,25 @@
                             <tbody>
                                 @foreach($columns_visible as $column)
                                     <tr>
-                                    <td>{!! Illuminate\Support\Str::title(str_replace('_', ' ', $column)) !!}</td>
-                                    <td>{!! $data->$column !!}</td>
+                                    <td>
+                                        @if (Illuminate\Support\Str::endsWith($column, '_id'))
+                                            {{ Illuminate\Support\Str::title(str_replace(['_id', '_'], ' ', $column)) }}
+                                        @else
+                                            {!! Illuminate\Support\Str::title(str_replace('_', ' ', $column)) !!}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if (Illuminate\Support\Str::endsWith($column, '_id'))
+											<?php
+											$relational_model = '\App\\' . ucfirst(Illuminate\Support\Str::camel(Illuminate\Support\Str::singular(Illuminate\Support\Str::limit($column, strlen($column) - strlen('_id'), ''))));
+											?>
+                                            @if($relational_model::find($data->$column))
+                                                {{ $relational_model::find($data->$column)->name }}
+                                            @endif
+                                        @else
+                                            {!! $data->$column !!}
+                                        @endif
+                                    </td>
                                     </tr>
                                 @endforeach
                             </tbody>

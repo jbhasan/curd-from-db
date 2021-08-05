@@ -20,7 +20,13 @@
                                 <tr>
                                     <th>Sl</th>
                                     @foreach($columns_visible as $column)
-                                        <th>{!! Illuminate\Support\Str::title(str_replace('_', ' ', $column)) !!}</th>
+                                        <th>
+                                            @if (Illuminate\Support\Str::endsWith($column, '_id'))
+                                                {{ Illuminate\Support\Str::title(str_replace(['_id', '_'], ' ', $column)) }}
+                                            @else
+                                                {!! Illuminate\Support\Str::title(str_replace('_', ' ', $column)) !!}
+                                            @endif
+                                        </th>
                                     @endforeach
                                     @if (in_array('edit', $permissions) || in_array('delete', $permissions) || in_array('view', $permissions))
                                         <th>Action</th>
@@ -33,7 +39,19 @@
                                     <tr>
                                         <td>{!! ++$serial !!}</td>
                                         @foreach($columns_visible as $column)
-                                            <td>{!! $data_item->$column !!}</td>
+                                            <td>
+                                                @if (Illuminate\Support\Str::endsWith($column, '_id'))
+													<?php
+													$relational_model = '\App\\' . ucfirst(Illuminate\Support\Str::camel(Illuminate\Support\Str::singular(Illuminate\Support\Str::limit($column, strlen($column) - strlen('_id'), ''))));
+													?>
+                                                    @if($relational_model::find($data_item->$column))
+                                                        {{ $relational_model::find($data_item->$column)->name }}
+                                                    @endif
+                                                @else
+                                                    {!! $data_item->$column !!}
+                                                @endif
+                                            </td>
+
                                         @endforeach
                                         @if (in_array('edit', $permissions) || in_array('delete', $permissions) || in_array('view', $permissions))
                                             <td>
@@ -65,8 +83,8 @@
             </div>
         </div>
     </div>
-    @endsection
+@endsection
 
-    @push('script')
+@push('script')
 
-    @endpush
+@endpush
